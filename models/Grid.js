@@ -148,11 +148,12 @@ class Grid {
         if (this.unrevealedSafeSquares == 0) {
             this.gameStatus = GameStatus.WIN;
             // tag all mines
-            for (let i = 1; i <= height; i++)
-                for (let j = 1; j <= width; j++)
+            for (let i = 1; i <= this.height; i++)
+                for (let j = 1; j <= this.width; j++)
                     if (this.tagMap[i][j] == Tag.UNREVEALED)
                         this.tagMap[i][j] = Tag.TAGGED;
         }
+        this.untaggedMines = 0;
     }
 
     tag(x, y) {
@@ -182,7 +183,7 @@ class Grid {
         if (this.tagMap[x][y] != Tag.REVEALED)
             return;
         // check if nearby mines are all tagged
-        let unrevealedMines = mineMap[x][y];
+        let unrevealedMines = this.mineMap[x][y];
         let xx, yy;
         for (let dx = -1; dx <= 1; dx++)
             for (let dy = -1; dy <= 1; dy++) {

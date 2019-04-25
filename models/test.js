@@ -1,2 +1,2 @@
 const Grid = require('./Grid');
-grid = new Grid(9, 9, 10);
+grid = new Grid(8, 8, 3);
