@@ -11,19 +11,33 @@ router.post('/', (req, res) => {
     let {height, width, mines} = req.body;
     let grid = new Grid(height, width, mines);
     let game = new Game(grid);
+    game.createTime = game.editTime = Date.now();
     game.save().then((game)=>{
         res.json({id: game.id});
     });
     mongoose.connect(url, {useNewUrlParser: true}).then();
 });
 
-/* get games */
+/* get games info */
 router.get('/', (req, res) => {
-
-    mongoose.connect(url, {useNewUrlParser: true}).then(
-        () => {
-            res.json({id: game.id});
-        });
+    Game.find({}).sort('-editTime').then((games)=>{
+        let gameInfos = [];
+        games.forEach((game)=>{
+            gameInfos.push({
+                gameId: game._id,
+                createTime: game.createTime,
+                editTime: game.editTime,
+                height: game.height,
+                width: game.width,
+                mines: game.mines,
+                unrevealedSafeSquares: game.unrevealedSafeSquares,
+                untaggedMines: game.untaggedMines,
+                gameStatus: game.gameStatus,
+            });
+        })
+        res.json(gameInfos);
+    });
+    mongoose.connect(url, {useNewUrlParser: true}).then();
 });
 
 /* get a game */
@@ -57,10 +71,21 @@ router.put('/:gameId', (req, res) => {
                 game.replay();
                 break;
         }
+        game.editTime = Date.now();
         game.markModified('tagMap');
+        game.markModified('editTime');
         game.save();
         clientGame = game.getClientGame();
         res.json(clientGame);
+    })
+    mongoose.connect(url, {useNewUrlParser: true}).then();
+});
+
+/* delete a game */
+router.delete('/:gameId', (req, res) => {
+    let {gameId} = req.params;
+    Game.deleteOne({_id: gameId}).then(() => {
+        res.json({});
     })
     mongoose.connect(url, {useNewUrlParser: true}).then();
 });

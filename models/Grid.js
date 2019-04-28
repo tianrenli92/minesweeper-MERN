@@ -170,8 +170,8 @@ class Grid {
                 for (let j = 1; j <= this.width; j++)
                     if (this.tagMap[i][j] == Tag.UNREVEALED)
                         this.tagMap[i][j] = Tag.TAGGED;
+            this.untaggedMines = 0;
         }
-        this.untaggedMines = 0;
     }
 
     tag(x, y) {

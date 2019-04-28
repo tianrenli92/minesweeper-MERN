@@ -3,6 +3,8 @@ const Grid = require('./Grid')
 const Schema = mongoose.Schema;
 
 const gameSchema = new Schema({
+    createTime: Date,
+    editTime: Date,
     height: Number,
     width: Number,
     mines: Number,
