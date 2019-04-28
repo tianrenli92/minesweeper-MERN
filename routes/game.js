@@ -18,6 +18,17 @@ router.post('/', (req, res) => {
         });
 });
 
+router.get('/:gameId', (req, res) => {
+    let {gameId} = req.params;
+    Game.findById(gameId).then((game) => {
+
+    })
+    mongoose.connect(url, {useNewUrlParser: true}).then(
+        () => {
+            res.json({gameLog});
+        });
+});
+
 router.put('/:gameId', (req, res) => {
     let {gameId} = req.params;
     let {gameEvent, x, y} = req.body;
@@ -26,32 +37,26 @@ router.put('/:gameId', (req, res) => {
         switch (gameEvent) {
             case GameEvent.REVEAL:
                 game.reveal(x, y);
-                game.markModified('tagMap');
-                game.save();
+
                 break;
             case GameEvent.TAG:
                 game.tag(x, y);
-                game.markModified('tagMap');
-                game.save();
                 break;
             case GameEvent.QUICK_CLEAR:
                 game.quickClear(x, y);
-                game.markModified('tagMap');
-                game.save();
                 break;
             case GameEvent.REPLAY:
                 game.replay();
-                game.markModified('tagMap');
-                game.save();
                 break;
         }
         gameLog = game;
+        game.markModified('tagMap');
+        game.save();
     })
     mongoose.connect(url, {useNewUrlParser: true}).then(
         () => {
             res.json({gameLog});
         });
-
 });
 
 // /* GET all games. */

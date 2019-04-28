@@ -223,25 +223,38 @@ class Grid {
             console.log(`Status: LOSE`);
         else if (this.gameStatus == GameStatus.WIN)
             console.log(`Status: WIN`);
+        let displayedBoard = this.getDisplayedBoard();
+        displayedBoard.forEach((row)=> {
+            row.forEach((square)=> {
+                process.stdout.write(square);
+            });
+            process.stdout.write('\n');
+        });
+    }
+
+    getDisplayedBoard(){
+        let displayedBoard = [];
         for (let i = 0; i < this.height + 2; i++) {
+            let row = [];
             for (let j = 0; j < this.width + 2; j++) {
                 if (this.mineMap[i][j] == Square.MAP_FRAME)
-                    process.stdout.write('#');
+                    row.push('#');
                 else if (this.tagMap[i][j] == Tag.UNREVEALED)
-                    process.stdout.write(' ');
+                    row.push(' ');
                 else if (this.tagMap[i][j] == Tag.TAGGED)
-                    process.stdout.write('F');
+                    row.push('F');
                 else if (this.tagMap[i][j] == Tag.QUESTIONED)
-                    process.stdout.write('?');
+                    row.push('?');
                 // else it is revealed
                 else if (this.mineMap[i][j] == Square.MAP_MINE)
-                    process.stdout.write('X');
+                    row.push('X');
                 // else show nearby mine count
                 else
-                    process.stdout.write(this.mineMap[i][j].toString());
+                    row.push(this.mineMap[i][j].toString());
             }
-            process.stdout.write('\n');
+            displayedBoard.push(row);
         }
+        return displayedBoard;
     }
 }
 
