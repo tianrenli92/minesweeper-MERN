@@ -3,16 +3,27 @@ const Square = require('./Square');
 const Tag = require('./Tag');
 
 class Grid {
-    constructor(height, width, mines) {
+    constructor(height, width, mines, squares, unrevealedSafeSquares, untaggedMines, gameStatus, tagMap, firstReveal, mineMap) {
         this.height = height;
         this.width = width;
         this.mines = mines;
-        this.squares = height * width;
-        this.unrevealedSafeSquares = this.squares - this.mines;
-        this.untaggedMines = mines;
-        this.gameStatus = GameStatus.ONGOING;
-        this.tagMap = this.generateTagMap(height, width);
-        this.firstReveal = false;
+        if (squares) {
+            this.squares = squares;
+            this.unrevealedSafeSquares = unrevealedSafeSquares;
+            this.untaggedMines = untaggedMines;
+            this.gameStatus = gameStatus;
+            this.tagMap = tagMap;
+            this.firstReveal = firstReveal;
+            this.mineMap = mineMap;
+        } else {
+            this.squares = height * width;
+            this.unrevealedSafeSquares = this.squares - this.mines;
+            this.untaggedMines = mines;
+            this.gameStatus = GameStatus.ONGOING;
+            this.tagMap = this.generateTagMap(height, width);
+            this.firstReveal = false;
+            this.mineMap = [[]];
+        }
     }
 
     generateTagMap(height, width) {
@@ -216,15 +227,15 @@ class Grid {
     show() {
         console.log(`Mines left: ${this.untaggedMines}`)
         console.log(`Squares left: ${this.unrevealedSafeSquares}`)
-        if(this.gameStatus==GameStatus.ONGOING)
+        if (this.gameStatus == GameStatus.ONGOING)
             console.log(`Status: ONGOING`);
-        else if(this.gameStatus==GameStatus.LOSE)
+        else if (this.gameStatus == GameStatus.LOSE)
             console.log(`Status: LOSE`);
-        else if(this.gameStatus==GameStatus.WIN)
+        else if (this.gameStatus == GameStatus.WIN)
             console.log(`Status: WIN`);
-        for (let i = 0; i < this.height + 2; i++){
-            for (let j = 0; j < this.width + 2; j++){
-                if(this.mineMap[i][j] == Square.MAP_FRAME)
+        for (let i = 0; i < this.height + 2; i++) {
+            for (let j = 0; j < this.width + 2; j++) {
+                if (this.mineMap[i][j] == Square.MAP_FRAME)
                     process.stdout.write('#');
                 else if (this.tagMap[i][j] == Tag.UNREVEALED)
                     process.stdout.write(' ');

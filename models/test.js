@@ -1,2 +1,4 @@
-const Grid = require('./Grid');
-grid = new Grid(8, 8, 3);
+function f(x){
+    console.log(x);
+}
+f();
