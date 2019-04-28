@@ -13,7 +13,7 @@ class Grid {
         this.gameStatus = GameStatus.ONGOING;
         this.tagMap = this.generateTagMap(height, width);
         this.firstReveal = false;
-        this.mineMap = [[]];
+        this.mineMap = this.generateEmptyMineMap(height, width);
     }
 
     generateTagMap(height, width) {
@@ -28,6 +28,24 @@ class Grid {
         return tagMap;
     }
 
+    generateEmptyMineMap(height, width) {
+        // frame mineMap
+        let mineMap = [];
+        for (let i = 0; i < height + 2; i++) {
+            let row = [];
+            for (let j = 0; j < width + 2; j++) {
+                row.push(Square.MAP_FRAME);
+            }
+            mineMap.push(row);
+        }
+        for (let i = 1; i <= height; i++) {
+            for (let j = 1; j <= width; j++) {
+                mineMap[i][j] = 0;
+            }
+        }
+        return mineMap;
+    }
+
     reveal(x, y) {
         // validate
         if (this.gameStatus != GameStatus.ONGOING)
@@ -38,7 +56,7 @@ class Grid {
         this.tagMap[x][y] = Tag.REVEALED;
         // check if firstReveal
         if (!this.firstReveal) {
-            this.mineMap = this.generateMineMap(this.height, this.width, this.squares, this.mines, x, y);
+            this.generateMines(x, y);
             this.firstReveal = true;
         }
         // check mine
@@ -77,16 +95,13 @@ class Grid {
         this.show();
     }
 
-    generateMineMap(height, width, squares, mines, firstX, firstY) {
-        // frame mineMap
-        let mineMap = [];
-        for (let i = 0; i < height + 2; i++) {
-            let row = [];
-            for (let j = 0; j < width + 2; j++) {
-                row.push(Square.MAP_FRAME);
-            }
-            mineMap.push(row);
-        }
+    generateMines(firstX, firstY) {
+        let mineMap = this.mineMap;
+        let height = this.height;
+        let width = this.width;
+        let squares = this.squares;
+        let mines = this.mines;
+
         // randomly generate mines
         let safeSquares = squares - mines;
         for (let i = 1; i <= height; i++) {
@@ -120,8 +135,10 @@ class Grid {
             }
         }
         // print mineMap
-        console.log(mineMap)
-        return mineMap;
+        console.log('Mine map:');
+        mineMap.forEach((row)=>{
+            console.log(row);
+        });
     }
 
     randomInt(x) {
@@ -223,17 +240,17 @@ class Grid {
             console.log(`Status: LOSE`);
         else if (this.gameStatus == GameStatus.WIN)
             console.log(`Status: WIN`);
-        let displayedBoard = this.getDisplayedBoard();
-        displayedBoard.forEach((row)=> {
-            row.forEach((square)=> {
+        let clientMap = this.getClientMap();
+        clientMap.forEach((row) => {
+            row.forEach((square) => {
                 process.stdout.write(square);
             });
             process.stdout.write('\n');
         });
     }
 
-    getDisplayedBoard(){
-        let displayedBoard = [];
+    getClientMap() {
+        let clientMap = [];
         for (let i = 0; i < this.height + 2; i++) {
             let row = [];
             for (let j = 0; j < this.width + 2; j++) {
@@ -252,9 +269,22 @@ class Grid {
                 else
                     row.push(this.mineMap[i][j].toString());
             }
-            displayedBoard.push(row);
+            clientMap.push(row);
         }
-        return displayedBoard;
+        return clientMap;
+    }
+
+    getClientGame() {
+        return {
+            height: this.height,
+            width: this.width,
+            mines: this.mines,
+            squares: this.squares,
+            unrevealedSafeSquares: this.unrevealedSafeSquares,
+            untaggedMines: this.untaggedMines,
+            gameStatus: this.gameStatus,
+            clientMap: this.getClientMap(),
+        }
     }
 }
 
