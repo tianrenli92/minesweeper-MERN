@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const GameStatus = require('GameStatus')
-const Grid = require('Grid')
+const Grid = require('./Grid')
 const Schema = mongoose.Schema;
 
 const gameSchema = new Schema({
@@ -16,5 +15,8 @@ const gameSchema = new Schema({
     mineMap: [[Number]],
 })
 
+gameSchema.loadClass(Grid);
 
 const Game = mongoose.model('Game', gameSchema);
+
+module.exports = Game;

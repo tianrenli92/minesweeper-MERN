@@ -3,27 +3,17 @@ const Square = require('./Square');
 const Tag = require('./Tag');
 
 class Grid {
-    constructor(height, width, mines, squares, unrevealedSafeSquares, untaggedMines, gameStatus, tagMap, firstReveal, mineMap) {
+    constructor(height, width, mines) {
         this.height = height;
         this.width = width;
         this.mines = mines;
-        if (squares) {
-            this.squares = squares;
-            this.unrevealedSafeSquares = unrevealedSafeSquares;
-            this.untaggedMines = untaggedMines;
-            this.gameStatus = gameStatus;
-            this.tagMap = tagMap;
-            this.firstReveal = firstReveal;
-            this.mineMap = mineMap;
-        } else {
-            this.squares = height * width;
-            this.unrevealedSafeSquares = this.squares - this.mines;
-            this.untaggedMines = mines;
-            this.gameStatus = GameStatus.ONGOING;
-            this.tagMap = this.generateTagMap(height, width);
-            this.firstReveal = false;
-            this.mineMap = [[]];
-        }
+        this.squares = height * width;
+        this.unrevealedSafeSquares = this.squares - this.mines;
+        this.untaggedMines = mines;
+        this.gameStatus = GameStatus.ONGOING;
+        this.tagMap = this.generateTagMap(height, width);
+        this.firstReveal = false;
+        this.mineMap = [[]];
     }
 
     generateTagMap(height, width) {
