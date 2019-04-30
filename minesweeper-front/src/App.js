@@ -1,26 +1,29 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import Games from './Games';
+import Config from "./Config";
+import Game from "./Game";
+
+class App extends Component {
+
+    render() {
+        return (
+            <Router>
+                <div className="container">
+                    <h2>Welcome to Minesweeper!</h2>
+                    <hr />
+                    <Switch>
+                        <Route exact path="/" render={()=>(<Redirect to="/games"/>)}/>
+                        <Route exact path='/games' component={ Games } />
+                        <Route exact path='/games/config' component={ Config } />
+                        <Route exact path='/games/:gameId' component={ Game } />
+                    </Switch>
+                </div>
+            </Router>
+        );
+    }
 }
 
 export default App;
