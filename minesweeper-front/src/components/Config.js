@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import Form from 'react-bootstrap/Form';
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Alert from "react-bootstrap/Alert";
+import axios from "axios";
 
 export default class Config extends Component {
     constructor(props){
@@ -13,6 +14,7 @@ export default class Config extends Component {
             mines: '10',
             isTextDisabled: true,
             msg: '',
+            redirectGameId: '',
         }
         this.handleTextChange = this.handleTextChange.bind(this);
         this.handleDifficultyChange = this.handleDifficultyChange.bind(this);
@@ -29,7 +31,7 @@ export default class Config extends Component {
     handleDifficultyChange(event){
         let id = event.target.id;
         switch(id){
-            case('0'):
+            case '0':
                 this.setState({
                     height: '9',
                     width: '9',
@@ -37,7 +39,7 @@ export default class Config extends Component {
                     isTextDisabled: true,
                 })
                 break;
-            case('1'):
+            case '1':
                 this.setState({
                     height: '16',
                     width: '16',
@@ -45,7 +47,7 @@ export default class Config extends Component {
                     isTextDisabled: true,
                 })
                 break;
-            case('2'):
+            case '2':
                 this.setState({
                     height: '16',
                     width: '30',
@@ -53,19 +55,61 @@ export default class Config extends Component {
                     isTextDisabled: true,
                 })
                 break;
-            case('3'):
+            case '3':
                 this.setState({
                     isTextDisabled: false,
                 })
+                break;
+            default:
                 break;
         }
     }
     handleSubmit(event) {
         event.preventDefault();
         const {height, width, mines} = this.state;
-        console.log(this.state);
+        if(isNaN(height)){
+            this.setState({msg:'Height is not number.'});
+            return;
+        }
+        if(isNaN(width)){
+            this.setState({msg:'Width is not number.'});
+            return;
+        }
+        if(isNaN(mines)){
+            this.setState({msg:'Mines is not number.'});
+            return;
+        }
+        if (height < 1 || height > 16) {
+            this.setState({msg:'Height should be between 1 and 16.'});
+            return;
+        }
+        if (width < 1 || width > 30) {
+            this.setState({msg:'Width should be between 1 and 30.'});
+            return;
+        }
+        if (mines < 1 || mines >= height * width) {
+            this.setState({msg:`Mines should be between 1 and ${height * width - 1} (squares - 1).`});
+            return;
+        }
+        this.createGame(height, width, mines);
     }
 
+    createGame(height, width, mines){
+        axios
+            .post("http://127.0.0.1:3001/api/v1/games", {height, width, mines})
+            .then(response => {
+                const {gameId} = response.data;
+                this.setState({redirectGameId: gameId});
+            })
+            .catch(error => console.log(error));
+    }
+
+    renderRedirect(){
+        const {redirectGameId} = this.state;
+        if (redirectGameId) {
+            return <Redirect to={`/games/${redirectGameId}`} />
+        }
+    }
     render() {
         const {msg} = this.state;
         return (
@@ -104,6 +148,7 @@ export default class Config extends Component {
                     {msg}
                 </Alert>
                 }
+                {this.renderRedirect()}
             </div>
         )
     }

@@ -51,7 +51,7 @@ export default class Games extends Component {
                 <div>{isGamesLoaded ? null : 'Loading...'}</div>
                 {isGamesLoaded &&
                 <div>
-                    <div class="m-2">
+                    <div className="m-2">
                         <Link to={'/games/new'}><Button variant='success'>New Game</Button></Link>
                     </div>
                     <h4>
@@ -100,8 +100,9 @@ export default class Games extends Component {
     }
 
     deleteGame(gameId) {
-        console.log(gameId);
-        axios.delete("http://127.0.0.1:3001/api/v1/games/" + gameId);
-        this.updateGames();
+        axios.delete("http://127.0.0.1:3001/api/v1/games/" + gameId).then(()=> {
+            this.updateGames();
+        }
+    )
     }
 }

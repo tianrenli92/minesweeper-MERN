@@ -13,7 +13,7 @@ router.post('/', (req, res) => {
     let game = new Game(grid);
     game.createTime = game.editTime = Date.now();
     game.save().then((game)=>{
-        res.json({id: game.id});
+        res.json({gameId: game.id});
     });
     mongoose.connect(url, {useNewUrlParser: true}).then();
 });
