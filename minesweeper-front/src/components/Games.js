@@ -3,8 +3,6 @@ import axios from "axios";
 import {Link} from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
 
 import GameStatusText from '../models/GameStatusText';
 
@@ -47,15 +45,14 @@ export default class Games extends Component {
     }
 
     render() {
-        const isGamesLoaded = this.state.isGamesLoaded;
-        const games = this.state.games;
+        const {isGamesLoaded, games} = this.state;
         return (
             <div>
                 <div>{isGamesLoaded ? null : 'Loading...'}</div>
                 {isGamesLoaded &&
                 <div>
                     <div class="m-2">
-                        <Button>New Game</Button>
+                        <Link to={'/games/new'}><Button variant='success'>New Game</Button></Link>
                     </div>
                     <h4>
                         Game Progress
