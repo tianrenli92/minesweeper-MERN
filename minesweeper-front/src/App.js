@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Games from './Games';
-import Config from "./Config";
-import Game from "./Game";
+
+import Games from './components/Games';
+import Config from './components/Config';
+import Game from './components/Game';
 
 class App extends Component {
 
