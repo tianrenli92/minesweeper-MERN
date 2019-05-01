@@ -28,20 +28,22 @@ export default class Games extends Component {
 
     updateGames() {
         axios
-            .get("http://127.0.0.1:3001/api/v1/games")
+            .get('http://127.0.0.1:3001/api/v1/games')
             .then(response => {
-
-                // create an array of contacts only with relevant data
                 const games = response.data;
-
-                // create a new "State" object without mutating
-                // the original State object.
                 this.setState({
                     isGamesLoaded: true,
                     games: games,
                 });
             })
             .catch(error => console.log(error));
+    }
+
+    deleteGame(gameId) {
+        axios.delete('http://127.0.0.1:3001/api/v1/games/' + gameId).then(()=> {
+                this.updateGames();
+            }
+        )
     }
 
     render() {
@@ -97,12 +99,5 @@ export default class Games extends Component {
                 }
             </div>
         );
-    }
-
-    deleteGame(gameId) {
-        axios.delete("http://127.0.0.1:3001/api/v1/games/" + gameId).then(()=> {
-            this.updateGames();
-        }
-    )
     }
 }

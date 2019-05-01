@@ -96,7 +96,7 @@ export default class Config extends Component {
 
     createGame(height, width, mines){
         axios
-            .post("http://127.0.0.1:3001/api/v1/games", {height, width, mines})
+            .post('http://127.0.0.1:3001/api/v1/games', {height, width, mines})
             .then(response => {
                 const {gameId} = response.data;
                 this.setState({redirectGameId: gameId});
