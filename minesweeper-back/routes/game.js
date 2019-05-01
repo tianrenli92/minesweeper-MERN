@@ -9,7 +9,7 @@ const GameEvent = require('../models/GameEvent')
 /* post a new game */
 router.post('/', (req, res) => {
     let {height, width, mines} = req.body;
-    let grid = new Grid(height, width, mines);
+    let grid = new Grid(parseInt(height), parseInt(width), parseInt(mines));
     let game = new Game(grid);
     game.createTime = game.editTime = Date.now();
     game.save().then((game)=>{
@@ -72,6 +72,7 @@ router.put('/:gameId', (req, res) => {
                 break;
         }
         game.editTime = Date.now();
+        game.markModified('mineMap');
         game.markModified('tagMap');
         game.markModified('editTime');
         game.save();
