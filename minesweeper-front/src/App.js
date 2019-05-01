@@ -13,8 +13,7 @@ class App extends Component {
         return (
             <Router>
                 <div className="container">
-                    <h2>Welcome to Minesweeper!</h2>
-                    <hr />
+                    <h2 class="m-3 text-center">Minesweeper</h2>
                     <Switch>
                         <Route exact path="/" render={()=>(<Redirect to="/games"/>)}/>
                         <Route exact path='/games' component={ Games } />
